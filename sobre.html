@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Sobre — Descola</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">Descola</a>
+    <ul>
+      <li><a href="vagas.html">Vagas</a></li>
+      <li><a href="painel.html">Para recrutadores</a></li>
+      <!-- DÍVIDA TÉCNICA: sem aria-current="page" -->
+      <li><a href="sobre.html">Sobre</a></li>
+    </ul>
+  </nav>
+
+  <div class="sobre-container">
+
+    <!-- DÍVIDA TÉCNICA: section sem aria-labelledby -->
+    <section class="sobre-hero">
+      <h1>O Descola existe para abrir portas</h1>
+      <p>Somos uma plataforma gratuita que conecta jovens em situação de vulnerabilidade às suas primeiras oportunidades de trabalho digno.</p>
+    </section>
+
+    <!-- DÍVIDA TÉCNICA: div informativa sem role="note" -->
+    <div class="ods-banner">
+      <strong>ODS 8 — Trabalho Decente e Crescimento Econômico</strong>
+      <p>Alinhado à Agenda 2030 da ONU, o Descola promove acesso ao emprego pleno, produtivo e digno para todos.</p>
+    </div>
+
+    <section>
+      <h2 style="font-size:18px;font-weight:700;color:#1C1C1A;margin-bottom:16px;">Como funciona</h2>
+      <!-- DÍVIDA TÉCNICA: lista sem role="list" -->
+      <div class="como-lista">
+        <div class="como-item">
+          <div class="como-num">1</div>
+          <div>
+            <strong>Busque vagas</strong>
+            <p>Filtre por área, tipo de contrato e localização sem precisar criar conta.</p>
+          </div>
+        </div>
+        <div class="como-item">
+          <div class="como-num">2</div>
+          <div>
+            <strong>Candidate-se em minutos</strong>
+            <p>Preencha um formulário simples. Currículo é opcional.</p>
+          </div>
+        </div>
+        <div class="como-item">
+          <div class="como-num">3</div>
+          <div>
+            <strong>A empresa entra em contato</strong>
+            <p>Receba o retorno diretamente por e-mail ou WhatsApp.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-top:32px;">
+      <h2 style="font-size:18px;font-weight:700;color:#1C1C1A;margin-bottom:16px;">Dúvidas frequentes</h2>
+      <div class="faq-lista">
+
+        <div class="faq-item">
+          <!-- DÍVIDA TÉCNICA: button sem aria-expanded e sem aria-controls -->
+          <button class="faq-pergunta" onclick="toggleFaq(this)">
+            O Descola é gratuito para candidatos?
+            <span>+</span>
+          </button>
+          <div class="faq-resposta">
+            Sim, 100% gratuito. Nunca cobramos nada de quem busca emprego.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-pergunta" onclick="toggleFaq(this)">
+            Preciso ter experiência para me candidatar?
+            <span>+</span>
+          </button>
+          <div class="faq-resposta">
+            Não. A maioria das vagas é para quem está começando. Muitas não exigem experiência anterior.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-pergunta" onclick="toggleFaq(this)">
+            Meus dados estão seguros?
+            <span>+</span>
+          </button>
+          <div class="faq-resposta">
+            Sim. Seguimos a LGPD e seus dados só são compartilhados com a empresa da vaga que você escolheu.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-pergunta" onclick="toggleFaq(this)">
+            Como uma empresa publica vagas?
+            <span>+</span>
+          </button>
+          <div class="faq-resposta">
+            Basta acessar "Para recrutadores", criar uma conta e publicar sua vaga gratuitamente.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section style="margin-top:32px;">
+      <h2 style="font-size:18px;font-weight:700;color:#1C1C1A;margin-bottom:16px;">Entre em contato</h2>
+      <div class="contato-grid">
+        <div class="contato-item">
+          <span>E-mail</span>
+          <a href="mailto:oi@descola.app">oi@descola.app</a>
+        </div>
+        <div class="contato-item">
+          <span>Instagram</span>
+          <a href="#">@descolaapp</a>
+        </div>
+        <div class="contato-item">
+          <span>WhatsApp</span>
+          <a href="#">(85) 9 0000-0000</a>
+        </div>
+        <div class="contato-item">
+          <span>LinkedIn</span>
+          <a href="#">/company/descola</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- DÍVIDA TÉCNICA: div sem role="note" para declaração de acessibilidade -->
+    <div style="background:#E6F1FB;border:0.5px solid #85B7EB;border-radius:8px;padding:16px 20px;margin-top:16px;">
+      <strong style="display:block;font-size:14px;color:#0C447C;margin-bottom:4px;">Declaração de acessibilidade</strong>
+      <p style="font-size:13px;color:#0C447C;line-height:1.6;">
+        O Descola busca seguir as diretrizes WCAG 2.1 AA. Encontrou uma barreira de acessibilidade?
+        Fale com a gente em <a href="mailto:oi@descola.app" style="color:#0C447C;">oi@descola.app</a>
+      </p>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>Descola &copy; 2025 · ODS 8 — Trabalho Decente e Crescimento Econômico</p>
+  </footer>
+
+  <script>
+    // DÍVIDA TÉCNICA: função de accordion sem gerenciar aria-expanded
+    function toggleFaq(btn) {
+      var resposta = btn.nextElementSibling;
+      var icone = btn.querySelector('span');
+      resposta.classList.toggle('aberta');
+      icone.textContent = resposta.classList.contains('aberta') ? '−' : '+';
+    }
+  </script>
+
+</body>
+</html>

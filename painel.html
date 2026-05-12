@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Painel do Recrutador — Descola</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">Descola</a>
+    <ul>
+      <li><a href="vagas.html">Vagas</a></li>
+      <li><a href="painel.html">Para recrutadores</a></li>
+      <li><a href="sobre.html">Sobre</a></li>
+    </ul>
+  </nav>
+
+  <!-- ÁREA DE LOGIN -->
+  <div class="login-container" id="area-login" style="display:none;">
+    <div class="login-card">
+      <h1>Acesso para recrutadores</h1>
+      <p>Entre com suas credenciais para gerenciar suas vagas.</p>
+
+      <!-- DÍVIDA TÉCNICA: form sem aria-label -->
+      <form id="form-login">
+        <div class="campo">
+          <label for="login-usuario">E-mail</label>
+          <!-- DÍVIDA TÉCNICA: sem aria-required, sem autocomplete -->
+          <input type="email" id="login-usuario" placeholder="recrutador@empresa.com" />
+        </div>
+        <div class="campo">
+          <label for="login-senha">Senha</label>
+          <!-- DÍVIDA TÉCNICA: sem aria-required -->
+          <input type="password" id="login-senha" placeholder="Sua senha" />
+        </div>
+        <!-- DÍVIDA TÉCNICA: sem aria-describedby para erros de login -->
+        <button type="submit" class="btn-primary" style="width:100%;margin-top:8px;">Entrar</button>
+      </form>
+
+      <!-- DÍVIDA TÉCNICA: credenciais visíveis em comentário HTML (!) -->
+      <!-- Login de teste: recrutador@descola.app / descola123 -->
+
+      <p style="font-size:12px;color:#6B6B67;text-align:center;margin-top:16px;">
+        Ainda não tem conta?
+        <a href="#" style="color:#2E7D52;">Cadastre sua empresa</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- ÁREA DO PAINEL -->
+  <div class="painel-container" id="area-painel" style="display:none;">
+
+    <div class="painel-header">
+      <div>
+        <h1>Painel do recrutador</h1>
+        <p>Bem-vindo, <span id="nome-empresa"></span></p>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn-primary">+ Nova vaga</button>
+        <button class="btn-secondary" onclick="sair()">Sair</button>
+      </div>
+    </div>
+
+    <!-- DÍVIDA TÉCNICA: section sem aria-label -->
+    <div class="metricas-grid">
+      <div class="metrica-card">
+        <div class="val">3</div>
+        <div class="lbl">Vagas ativas</div>
+      </div>
+      <div class="metrica-card">
+        <div class="val">27</div>
+        <div class="lbl">Candidaturas</div>
+      </div>
+      <div class="metrica-card">
+        <div class="val">5</div>
+        <div class="lbl">Novas hoje</div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <h2 style="font-size:16px;font-weight:700;color:#1C1C1A;">Minhas vagas</h2>
+      <a href="#" style="font-size:13px;color:#2E7D52;">Ver todas</a>
+    </div>
+
+    <!-- DÍVIDA TÉCNICA: lista sem role="list" -->
+    <div class="vagas-lista" id="vagas-recrutador"></div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <h2 style="font-size:16px;font-weight:700;color:#1C1C1A;">Candidatos recentes</h2>
+      <!-- DÍVIDA TÉCNICA: select sem label -->
+      <select style="font-size:12px;border:0.5px solid #E0DED9;border-radius:6px;padding:4px 8px;background:#fff;">
+        <option>Todas as vagas</option>
+        <option>Assistente de marketing</option>
+        <option>Auxiliar de atendimento</option>
+      </select>
+    </div>
+
+    <div style="background:#fff;border:0.5px solid #E0DED9;border-radius:12px;padding:16px 20px;">
+      <!-- DÍVIDA TÉCNICA: lista sem role="list" -->
+      <div id="candidatos-recentes"></div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>Descola &copy; 2025 · ODS 8 — Trabalho Decente e Crescimento Econômico</p>
+  </footer>
+
+  <script src="js/painel.js"></script>
+</body>
+</html>

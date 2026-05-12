@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Vagas — Descola</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">Descola</a>
+    <ul>
+      <!-- DÍVIDA TÉCNICA: sem aria-current="page" no item ativo -->
+      <li><a href="vagas.html">Vagas</a></li>
+      <li><a href="painel.html">Para recrutadores</a></li>
+      <li><a href="sobre.html">Sobre</a></li>
+    </ul>
+  </nav>
+
+  <div style="background:#ffffff;border-bottom:0.5px solid #E0DED9;padding:16px 40px;">
+    <!-- DÍVIDA TÉCNICA: form de busca sem role="search" -->
+    <form id="form-busca" style="display:flex;gap:10px;max-width:560px;">
+      <!-- DÍVIDA TÉCNICA: input sem label associado -->
+      <input type="text" id="busca" placeholder="Cargo, área, cidade..."
+             style="flex:1;padding:10px 14px;border:0.5px solid #E0DED9;border-radius:8px;font-size:14px;background:#F7F5F2;color:#1C1C1A;outline:none;" />
+      <button type="submit" class="btn-primary">Buscar</button>
+    </form>
+  </div>
+
+  <div style="padding:14px 40px;display:flex;justify-content:space-between;align-items:center;">
+    <!-- DÍVIDA TÉCNICA: sem aria-live="polite" no contador -->
+    <span id="contador" style="font-size:13px;color:#6B6B67;"></span>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <!-- DÍVIDA TÉCNICA: select sem label -->
+      <select id="ordenar" style="font-size:13px;border:0.5px solid #E0DED9;border-radius:6px;padding:5px 8px;background:#fff;color:#1C1C1A;">
+        <option>Mais recentes</option>
+        <option>Mais relevantes</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="filtros" style="padding-top:0;">
+    <div class="chips">
+      <span class="chip chip-ativo" data-tipo="todos" onclick="ativarChip(this)">Todos</span>
+      <span class="chip" data-tipo="Estagio" onclick="ativarChip(this)">Estágio</span>
+      <span class="chip" data-tipo="Aprendizagem" onclick="ativarChip(this)">Aprendizagem</span>
+      <span class="chip" data-tipo="Emprego" onclick="ativarChip(this)">Emprego</span>
+      <span class="chip" data-tipo="Presencial" onclick="ativarChip(this)">Presencial</span>
+      <span class="chip" data-tipo="Remoto" onclick="ativarChip(this)">Remoto</span>
+      <span class="chip" data-tipo="Hibrido" onclick="ativarChip(this)">Híbrido</span>
+    </div>
+  </div>
+
+  <!-- DÍVIDA TÉCNICA: sem role="main", sem aria-label -->
+  <div class="vagas-grid" id="vagas-container"></div>
+
+  <div class="paginacao" id="paginacao"></div>
+
+  <footer>
+    <p>Descola &copy; 2025 · ODS 8 — Trabalho Decente e Crescimento Econômico</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

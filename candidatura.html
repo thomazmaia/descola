@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Candidatura — Descola</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">Descola</a>
+    <ul>
+      <li><a href="vagas.html">Vagas</a></li>
+      <li><a href="painel.html">Para recrutadores</a></li>
+      <li><a href="sobre.html">Sobre</a></li>
+    </ul>
+  </nav>
+
+  <div class="form-container">
+    <div class="form-card" id="form-card">
+
+      <h1>Formulário de candidatura</h1>
+      <!-- DÍVIDA TÉCNICA: parágrafo de contexto sem id para aria-describedby -->
+      <p class="form-subtitulo" id="form-subtitulo">Carregando vaga...</p>
+
+      <!-- DÍVIDA TÉCNICA: sem progressbar acessível (aria-valuenow / aria-valuemin / aria-valuemax) -->
+      <div style="margin-bottom:24px;">
+        <p style="font-size:12px;color:#1A3A2A;font-weight:600;margin-bottom:6px;">Etapa 1 de 2 — Seus dados</p>
+        <div style="height:4px;background:#E0DED9;border-radius:2px;">
+          <div style="height:4px;background:#1A3A2A;border-radius:2px;width:50%;"></div>
+        </div>
+      </div>
+
+      <!-- DÍVIDA TÉCNICA: form sem novalidate — validação nativa sobrepõe a do JS -->
+      <form id="form-candidatura">
+
+        <div class="campo">
+          <label for="nome">Nome completo <span style="color:#A32D2D;">*</span></label>
+          <!-- DÍVIDA TÉCNICA: sem aria-required="true" -->
+          <input type="text" id="nome" name="nome" autocomplete="name"
+                 placeholder="Seu nome completo" />
+        </div>
+
+        <div class="campo">
+          <label for="email">E-mail <span style="color:#A32D2D;">*</span></label>
+          <input type="email" id="email" name="email" autocomplete="email"
+                 placeholder="seuemail@exemplo.com" />
+          <p class="dica">Usaremos apenas para te contatar sobre essa vaga</p>
+        </div>
+
+        <div class="campo">
+          <label for="tel">Telefone / WhatsApp <span style="color:#A32D2D;">*</span></label>
+          <input type="tel" id="tel" name="tel" autocomplete="tel"
+                 placeholder="(85) 9 0000-0000" />
+        </div>
+
+        <div class="campo">
+          <label for="idade">Sua idade <span style="color:#A32D2D;">*</span></label>
+          <select id="idade" name="idade">
+            <option value="" disabled selected>Selecione sua idade</option>
+            <option value="16">16 anos</option>
+            <option value="17">17 anos</option>
+            <option value="18">18 anos</option>
+            <option value="19-24">19 a 24 anos</option>
+            <option value="25+">25 anos ou mais</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <!-- DÍVIDA TÉCNICA: label sem for — não associado ao select -->
+          <label>Escolaridade</label>
+          <select name="escolaridade">
+            <option value="" disabled selected>Selecione</option>
+            <option>Ensino fundamental incompleto</option>
+            <option>Ensino fundamental completo</option>
+            <option>Ensino médio incompleto</option>
+            <option>Ensino médio completo</option>
+            <option>Ensino superior incompleto</option>
+            <option>Ensino superior completo</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label>Currículo (opcional)</label>
+          <!-- DÍVIDA TÉCNICA: área de upload sem role="button" e sem tabindex -->
+          <div class="upload-area" onclick="document.getElementById('arquivo').click()">
+            <p>Clique para enviar seu currículo</p>
+            <span>PDF ou Word, até 5 MB</span>
+            <input type="file" id="arquivo" name="arquivo" accept=".pdf,.doc,.docx"
+                   style="display:none;" />
+          </div>
+          <p class="dica">Sem currículo? Não tem problema — você pode se candidatar mesmo assim.</p>
+        </div>
+
+        <div class="campo">
+          <label for="msg">Por que você quer essa vaga? (opcional)</label>
+          <textarea id="msg" name="msg"
+                    placeholder="Conte um pouco sobre você e sua motivação..."></textarea>
+        </div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="lgpd" name="lgpd" />
+          <span>Concordo com o uso dos meus dados conforme a
+            <a href="#" style="color:#2E7D52;">Política de Privacidade</a>
+            do Descola (LGPD) <span style="color:#A32D2D;">*</span></span>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Continuar para revisão</button>
+          <button type="button" class="btn-secondary">Salvar e continuar depois</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <p>Descola &copy; 2025 · ODS 8 — Trabalho Decente e Crescimento Econômico</p>
+  </footer>
+
+  <script src="js/candidatura.js"></script>
+</body>
+</html>
