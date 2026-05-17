@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Descola — Painel do recrutador">
   <title>Painel do Recrutador — Descola</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -9,106 +11,125 @@
 </head>
 <body>
 
-  <nav>
-    <a href="index.html" class="logo">Descola</a>
-    <ul>
+  <a href="#conteudo-principal" class="skip-link">Ir para o conteúdo principal</a>
+
+  <nav role="navigation" aria-label="Navegação principal">
+    <a href="index.html" class="logo" aria-label="Descola — Página inicial">Descola</a>
+    <button class="nav-toggle" aria-controls="nav-menu" aria-expanded="false" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul id="nav-menu">
       <li><a href="vagas.html">Vagas</a></li>
-      <li><a href="painel.html">Para recrutadores</a></li>
+      <li><a href="painel.html" aria-current="page">Para recrutadores</a></li>
       <li><a href="sobre.html">Sobre</a></li>
     </ul>
   </nav>
 
-  <!-- ÁREA DE LOGIN -->
-  <div class="login-container" id="area-login" style="display:none;">
-    <div class="login-card">
-      <h1>Acesso para recrutadores</h1>
-      <p>Entre com suas credenciais para gerenciar suas vagas.</p>
+  <main id="conteudo-principal" role="main">
 
-      <!-- DÍVIDA TÉCNICA: form sem aria-label -->
-      <form id="form-login">
-        <div class="campo">
-          <label for="login-usuario">E-mail</label>
-          <!-- DÍVIDA TÉCNICA: sem aria-required, sem autocomplete -->
-          <input type="email" id="login-usuario" placeholder="recrutador@empresa.com" />
+    <!-- Área de login -->
+    <div class="login-container" id="area-login" style="display:none;">
+      <div class="login-card">
+        <h1>Acesso para recrutadores</h1>
+        <p>Entre com suas credenciais para gerenciar suas vagas.</p>
+
+        <!-- CORREÇÃO P9-C1: credenciais removidas do código -->
+        <!-- CORREÇÃO P8: aria-label no form, aria-required, autocomplete -->
+        <form id="form-login" aria-label="Formulário de login do recrutador" novalidate>
+          <div id="erro-login" role="alert" aria-live="assertive"
+               class="msg-erro" style="display:none;margin-bottom:12px;"></div>
+          <div class="campo">
+            <label for="login-usuario">E-mail</label>
+            <input type="email" id="login-usuario"
+                   autocomplete="email"
+                   placeholder="recrutador@empresa.com"
+                   required aria-required="true"
+                   aria-describedby="erro-login" />
+          </div>
+          <div class="campo">
+            <label for="login-senha">Senha</label>
+            <input type="password" id="login-senha"
+                   autocomplete="current-password"
+                   placeholder="Sua senha"
+                   required aria-required="true"
+                   aria-describedby="erro-login" />
+          </div>
+          <button type="submit" class="btn-primary"
+                  style="width:100%;margin-top:8px;">Entrar</button>
+        </form>
+
+        <p style="font-size:12px;color:#6B6B67;text-align:center;margin-top:16px;">
+          Ainda não tem conta?
+          <a href="#">Cadastre sua empresa</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Painel -->
+    <div class="painel-container" id="area-painel" style="display:none;">
+
+      <div class="painel-header">
+        <div>
+          <h1>Painel do recrutador</h1>
+          <p>Bem-vindo, <span id="nome-empresa"></span></p>
         </div>
-        <div class="campo">
-          <label for="login-senha">Senha</label>
-          <!-- DÍVIDA TÉCNICA: sem aria-required -->
-          <input type="password" id="login-senha" placeholder="Sua senha" />
+        <div style="display:flex;gap:10px;">
+          <button class="btn-primary" aria-label="Publicar nova vaga">+ Nova vaga</button>
+          <button class="btn-secondary" onclick="sair()">Sair</button>
         </div>
-        <!-- DÍVIDA TÉCNICA: sem aria-describedby para erros de login -->
-        <button type="submit" class="btn-primary" style="width:100%;margin-top:8px;">Entrar</button>
-      </form>
-
-      <!-- DÍVIDA TÉCNICA: credenciais visíveis em comentário HTML (!) -->
-      <!-- Login de teste: recrutador@descola.app / descola123 -->
-
-      <p style="font-size:12px;color:#6B6B67;text-align:center;margin-top:16px;">
-        Ainda não tem conta?
-        <a href="#" style="color:#2E7D52;">Cadastre sua empresa</a>
-      </p>
-    </div>
-  </div>
-
-  <!-- ÁREA DO PAINEL -->
-  <div class="painel-container" id="area-painel" style="display:none;">
-
-    <div class="painel-header">
-      <div>
-        <h1>Painel do recrutador</h1>
-        <p>Bem-vindo, <span id="nome-empresa"></span></p>
       </div>
-      <div style="display:flex;gap:10px;">
-        <button class="btn-primary">+ Nova vaga</button>
-        <button class="btn-secondary" onclick="sair()">Sair</button>
+
+      <!-- CORREÇÃO P8: aria-label na seção de métricas -->
+      <section aria-label="Resumo de métricas" class="metricas-grid">
+        <div class="metrica-card">
+          <div class="val" aria-label="3 vagas ativas">3</div>
+          <div class="lbl">Vagas ativas</div>
+        </div>
+        <div class="metrica-card">
+          <div class="val" aria-label="27 candidaturas recebidas">27</div>
+          <div class="lbl">Candidaturas</div>
+        </div>
+        <div class="metrica-card">
+          <div class="val" aria-label="5 novas candidaturas hoje">5</div>
+          <div class="lbl">Novas hoje</div>
+        </div>
+      </section>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h2 style="font-size:16px;font-weight:700;color:#1C1C1A;">Minhas vagas</h2>
+        <a href="#" aria-label="Ver todas as vagas publicadas"
+           style="font-size:13px;color:#2E7D52;">Ver todas</a>
       </div>
-    </div>
 
-    <!-- DÍVIDA TÉCNICA: section sem aria-label -->
-    <div class="metricas-grid">
-      <div class="metrica-card">
-        <div class="val">3</div>
-        <div class="lbl">Vagas ativas</div>
+      <!-- CORREÇÃO P8: role="list" e role="listitem" -->
+      <div class="vagas-lista" id="vagas-recrutador"
+           role="list" aria-label="Vagas publicadas"></div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h2 style="font-size:16px;font-weight:700;color:#1C1C1A;">Candidatos recentes</h2>
+        <label for="filtro-vaga" class="sr-only">Filtrar por vaga</label>
+        <select id="filtro-vaga"
+                style="font-size:12px;border:0.5px solid #E0DED9;border-radius:6px;
+                       padding:4px 8px;background:#fff;">
+          <option>Todas as vagas</option>
+          <option>Assistente de marketing</option>
+          <option>Auxiliar de atendimento</option>
+        </select>
       </div>
-      <div class="metrica-card">
-        <div class="val">27</div>
-        <div class="lbl">Candidaturas</div>
+
+      <div style="background:#fff;border:0.5px solid #E0DED9;border-radius:12px;padding:16px 20px;">
+        <!-- CORREÇÃO P8: role="list" -->
+        <div id="candidatos-recentes" role="list" aria-label="Candidatos recentes"></div>
       </div>
-      <div class="metrica-card">
-        <div class="val">5</div>
-        <div class="lbl">Novas hoje</div>
-      </div>
+
     </div>
+  </main>
 
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <h2 style="font-size:16px;font-weight:700;color:#1C1C1A;">Minhas vagas</h2>
-      <a href="#" style="font-size:13px;color:#2E7D52;">Ver todas</a>
-    </div>
-
-    <!-- DÍVIDA TÉCNICA: lista sem role="list" -->
-    <div class="vagas-lista" id="vagas-recrutador"></div>
-
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <h2 style="font-size:16px;font-weight:700;color:#1C1C1A;">Candidatos recentes</h2>
-      <!-- DÍVIDA TÉCNICA: select sem label -->
-      <select style="font-size:12px;border:0.5px solid #E0DED9;border-radius:6px;padding:4px 8px;background:#fff;">
-        <option>Todas as vagas</option>
-        <option>Assistente de marketing</option>
-        <option>Auxiliar de atendimento</option>
-      </select>
-    </div>
-
-    <div style="background:#fff;border:0.5px solid #E0DED9;border-radius:12px;padding:16px 20px;">
-      <!-- DÍVIDA TÉCNICA: lista sem role="list" -->
-      <div id="candidatos-recentes"></div>
-    </div>
-
-  </div>
-
-  <footer>
-    <p>Descola &copy; 2025 · ODS 8 — Trabalho Decente e Crescimento Econômico</p>
+  <footer role="contentinfo">
+    <p>Descola &copy; 2025 &middot; ODS 8 &mdash; Trabalho Decente e Crescimento Econômico</p>
   </footer>
 
+  <script src="js/utils.js"></script>
   <script src="js/painel.js"></script>
 </body>
 </html>
