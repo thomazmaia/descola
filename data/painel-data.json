@@ -1,0 +1,39 @@
+{
+  "vagas": [
+    {
+      "id": 1,
+      "titulo": "Assistente de marketing",
+      "meta": "Publicada há 1 dia · 8 candidatos",
+      "status": "Ativa"
+    },
+    {
+      "id": 2,
+      "titulo": "Auxiliar de atendimento",
+      "meta": "Publicada há 5 dias · 14 candidatos",
+      "status": "Ativa"
+    },
+    {
+      "id": 6,
+      "titulo": "Jovem aprendiz — TI",
+      "meta": "Encerrada há 10 dias · 5 candidatos",
+      "status": "Encerrada"
+    }
+  ],
+  "candidatos": [
+    {
+      "nome": "João Oliveira",
+      "vaga": "Assistente de marketing",
+      "tempo": "Há 2h"
+    },
+    {
+      "nome": "Maria Silva",
+      "vaga": "Auxiliar de atendimento",
+      "tempo": "Há 5h"
+    },
+    {
+      "nome": "Pedro Costa",
+      "vaga": "Assistente de marketing",
+      "tempo": "Ontem"
+    }
+  ]
+}
