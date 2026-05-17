@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Descola — Encontre vagas de emprego, estágio e aprendizagem.">
   <title>Vagas — Descola</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -9,59 +11,99 @@
 </head>
 <body>
 
-  <nav>
-    <a href="index.html" class="logo">Descola</a>
-    <ul>
-      <!-- DÍVIDA TÉCNICA: sem aria-current="page" no item ativo -->
-      <li><a href="vagas.html">Vagas</a></li>
+  <a href="#conteudo-principal" class="skip-link">Ir para o conteúdo principal</a>
+
+  <nav role="navigation" aria-label="Navegação principal">
+    <a href="index.html" class="logo" aria-label="Descola — Página inicial">Descola</a>
+    <button class="nav-toggle" aria-controls="nav-menu" aria-expanded="false" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul id="nav-menu">
+      <!-- CORREÇÃO P8-M6: aria-current="page" no link ativo -->
+      <li><a href="vagas.html" aria-current="page">Vagas</a></li>
       <li><a href="painel.html">Para recrutadores</a></li>
       <li><a href="sobre.html">Sobre</a></li>
     </ul>
   </nav>
 
-  <div style="background:#ffffff;border-bottom:0.5px solid #E0DED9;padding:16px 40px;">
-    <!-- DÍVIDA TÉCNICA: form de busca sem role="search" -->
-    <form id="form-busca" style="display:flex;gap:10px;max-width:560px;">
-      <!-- DÍVIDA TÉCNICA: input sem label associado -->
-      <input type="text" id="busca" placeholder="Cargo, área, cidade..."
-             style="flex:1;padding:10px 14px;border:0.5px solid #E0DED9;border-radius:8px;font-size:14px;background:#F7F5F2;color:#1C1C1A;outline:none;" />
-      <button type="submit" class="btn-primary">Buscar</button>
-    </form>
-  </div>
+  <main id="conteudo-principal" role="main">
 
-  <div style="padding:14px 40px;display:flex;justify-content:space-between;align-items:center;">
-    <!-- DÍVIDA TÉCNICA: sem aria-live="polite" no contador -->
-    <span id="contador" style="font-size:13px;color:#6B6B67;"></span>
-    <div style="display:flex;align-items:center;gap:8px;">
-      <!-- DÍVIDA TÉCNICA: select sem label -->
-      <select id="ordenar" style="font-size:13px;border:0.5px solid #E0DED9;border-radius:6px;padding:5px 8px;background:#fff;color:#1C1C1A;">
-        <option>Mais recentes</option>
-        <option>Mais relevantes</option>
-      </select>
+    <div style="background:#fff;border-bottom:0.5px solid #E0DED9;padding:16px 40px;">
+      <!-- CORREÇÃO P8-A2: role="search" e label explícito -->
+      <form id="form-busca" role="search" aria-label="Buscar vagas"
+            style="display:flex;gap:10px;max-width:560px;">
+        <label for="busca" class="sr-only">Buscar por cargo, área ou localização</label>
+        <input type="search" id="busca" name="busca"
+               placeholder="Cargo, área, cidade..."
+               style="flex:1;padding:10px 14px;border:0.5px solid #E0DED9;
+                      border-radius:8px;font-size:14px;background:#F7F5F2;
+                      color:#1C1C1A;" />
+        <button type="submit" class="btn-primary">Buscar</button>
+      </form>
     </div>
-  </div>
 
-  <div class="filtros" style="padding-top:0;">
-    <div class="chips">
-      <span class="chip chip-ativo" data-tipo="todos" onclick="ativarChip(this)">Todos</span>
-      <span class="chip" data-tipo="Estagio" onclick="ativarChip(this)">Estágio</span>
-      <span class="chip" data-tipo="Aprendizagem" onclick="ativarChip(this)">Aprendizagem</span>
-      <span class="chip" data-tipo="Emprego" onclick="ativarChip(this)">Emprego</span>
-      <span class="chip" data-tipo="Presencial" onclick="ativarChip(this)">Presencial</span>
-      <span class="chip" data-tipo="Remoto" onclick="ativarChip(this)">Remoto</span>
-      <span class="chip" data-tipo="Hibrido" onclick="ativarChip(this)">Híbrido</span>
+    <div style="padding:14px 40px;display:flex;justify-content:space-between;align-items:center;">
+      <!-- CORREÇÃO P8-M3: aria-live="polite" e role="status" -->
+      <span id="contador" role="status" aria-live="polite" aria-atomic="true"
+            style="font-size:13px;color:#6B6B67;"></span>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <label for="ordenar" style="font-size:13px;color:#6B6B67;">Ordenar:</label>
+        <select id="ordenar" aria-label="Ordenar resultados"
+                style="font-size:13px;border:0.5px solid #E0DED9;border-radius:6px;
+                       padding:5px 8px;background:#fff;color:#1C1C1A;">
+          <option>Mais recentes</option>
+          <option>Mais relevantes</option>
+        </select>
+      </div>
     </div>
-  </div>
 
-  <!-- DÍVIDA TÉCNICA: sem role="main", sem aria-label -->
-  <div class="vagas-grid" id="vagas-container"></div>
+    <div class="filtros" style="padding-top:0;">
+      <p id="label-filtros-vagas" class="sr-only">Filtrar vagas por tipo e modalidade</p>
+      <!-- CORREÇÃO P8-M1: role="group", aria-labelledby, role="button", tabindex, aria-pressed -->
+      <div class="chips" role="group" aria-labelledby="label-filtros-vagas">
+        <span class="chip chip-ativo" role="button" tabindex="0" data-tipo="todos"
+              aria-pressed="true"
+              onclick="ativarChip(this)"
+              onkeydown="if(event.key==='Enter'||event.key===' '){ativarChip(this)}">Todos</span>
+        <span class="chip" role="button" tabindex="0" data-tipo="Estagio"
+              aria-pressed="false"
+              onclick="ativarChip(this)"
+              onkeydown="if(event.key==='Enter'||event.key===' '){ativarChip(this)}">Estágio</span>
+        <span class="chip" role="button" tabindex="0" data-tipo="Aprendizagem"
+              aria-pressed="false"
+              onclick="ativarChip(this)"
+              onkeydown="if(event.key==='Enter'||event.key===' '){ativarChip(this)}">Aprendizagem</span>
+        <span class="chip" role="button" tabindex="0" data-tipo="Emprego"
+              aria-pressed="false"
+              onclick="ativarChip(this)"
+              onkeydown="if(event.key==='Enter'||event.key===' '){ativarChip(this)}">Emprego</span>
+        <span class="chip" role="button" tabindex="0" data-tipo="Presencial"
+              aria-pressed="false"
+              onclick="ativarChip(this)"
+              onkeydown="if(event.key==='Enter'||event.key===' '){ativarChip(this)}">Presencial</span>
+        <span class="chip" role="button" tabindex="0" data-tipo="Remoto"
+              aria-pressed="false"
+              onclick="ativarChip(this)"
+              onkeydown="if(event.key==='Enter'||event.key===' '){ativarChip(this)}">Remoto</span>
+        <span class="chip" role="button" tabindex="0" data-tipo="Hibrido"
+              aria-pressed="false"
+              onclick="ativarChip(this)"
+              onkeydown="if(event.key==='Enter'||event.key===' '){ativarChip(this)}">Híbrido</span>
+      </div>
+    </div>
 
-  <div class="paginacao" id="paginacao"></div>
+    <div class="vagas-grid" id="vagas-container"
+         role="region" aria-label="Lista de vagas"></div>
 
-  <footer>
-    <p>Descola &copy; 2025 · ODS 8 — Trabalho Decente e Crescimento Econômico</p>
+    <nav class="paginacao" id="paginacao" aria-label="Paginação de vagas"></nav>
+
+  </main>
+
+  <footer role="contentinfo">
+    <p>Descola &copy; 2025 &middot; ODS 8 &mdash; Trabalho Decente e Crescimento Econômico</p>
   </footer>
 
+  <script src="js/utils.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
