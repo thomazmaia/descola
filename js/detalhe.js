@@ -1,78 +1,148 @@
-// VERSÃO ANTES — dívidas técnicas propositais
-// Problemas: lógica de badge duplicada de main.js, sem tratamento de erro,
-// innerHTML sem sanitização, acesso direto ao localStorage sem try/catch
+/**
+ * detalhe.js — lógica da página de detalhe da vaga
+ *
+ * PASSO 9 refatorações:
+ * A5: var → const/let
+ * A6: funções menores com SRP
+ * A7: badge logic removida (agora em utils.js)
+ * B2: XHR → fetch com tratamento de erro
+ * C2: createElement + textContent (sem innerHTML inseguro)
+ * M5: == → ===
+ */
 
-// DÍVIDA TÉCNICA: lógica de badge duplicada (viola DRY)
-function getBadgeModalidade(modalidade) {
-  if (modalidade === 'Presencial') return '<span class="badge-modalidade-presencial">Presencial</span>';
-  if (modalidade === 'Hibrido') return '<span class="badge-modalidade-hibrido">Híbrido</span>';
-  if (modalidade === 'Remoto') return '<span class="badge-modalidade-remoto">Remoto</span>';
-  return '<span class="badge-tipo">' + modalidade + '</span>';
+'use strict';
+
+// ── Busca e renderização ───────────────────────────────────────
+async function carregarDetalhe() {
+  const id = obterIdVaga();
+  if (!id) { window.location.href = 'vagas.html'; return; }
+
+  try {
+    const vagas = await fetchJSON('data/vagas.json');
+    // PASSO 9 — M5: === em vez de ==
+    const vaga = vagas.find(v => v.id === id);
+    if (!vaga) { window.location.href = 'vagas.html'; return; }
+    renderizarDetalhe(vaga);
+  } catch (erro) {
+    console.error('Erro ao carregar detalhe:', erro.message);
+    mostrarErroDetalhe();
+  }
 }
 
-// DÍVIDA TÉCNICA: função gigante, sem separação de responsabilidades
-function carregarDetalhe() {
-  // DÍVIDA TÉCNICA: sem try/catch no localStorage
-  var id = parseInt(localStorage.getItem('vagaId'));
-  if (!id) {
-    window.location.href = 'vagas.html';
-    return;
+/**
+ * PASSO 9 — A6 (SRP): responsabilidade única de ler o id do storage.
+ * Antes estava misturado na função gigante carregarDetalhe().
+ */
+function obterIdVaga() {
+  try {
+    return parseInt(localStorage.getItem('vagaId'), 10) || null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * PASSO 9 — A6 (SRP): responsabilidade única de renderizar o detalhe.
+ * PASSO 9 — C2: usa textContent (sem innerHTML com dados externos).
+ * PASSO 9 — A7: badges via utils.js (sem duplicação).
+ */
+function renderizarDetalhe(vaga) {
+  // Badges
+  const badgesEl = document.getElementById('detalhe-badges');
+  if (badgesEl) {
+    badgesEl.replaceChildren();
+    badgesEl.appendChild(criarBadges(vaga.tipo, vaga.modalidade, vaga.nivel));
   }
 
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'data/vagas.json', true);
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState == 4 && xhr.status == 200) {
-      var vagas = JSON.parse(xhr.responseText);
-      // DÍVIDA TÉCNICA: magic number — loop manual sem find()
-      var vaga = null;
-      for (var i = 0; i < vagas.length; i++) {
-        if (vagas[i].id == id) { vaga = vagas[i]; break; }
-      }
-      if (!vaga) { window.location.href = 'vagas.html'; return; }
+  // Campos de texto — textContent (seguro)
+  setText('detalhe-titulo',    vaga.titulo);
+  setText('detalhe-empresa',   `${vaga.empresa} · ${vaga.cidade}, ${vaga.estado}`);
+  setText('detalhe-carga',     vaga.carga);
+  setText('detalhe-bolsa',     vaga.bolsa);
+  setText('detalhe-publicada', formatarDias(vaga.publicada));
+  setText('detalhe-encerra',   `${vaga.encerra} dias`);
+  setText('detalhe-descricao', vaga.descricao);
 
-      // DÍVIDA TÉCNICA: innerHTML massivo sem sanitização
-      document.getElementById('detalhe-badges').innerHTML =
-        '<span class="badge-tipo">' + vaga.tipo + '</span>' +
-        getBadgeModalidade(vaga.modalidade) +
-        '<span class="badge-tipo">' + vaga.nivel + '</span>';
+  // Requisitos — lista segura
+  renderizarLista('detalhe-requisitos', vaga.requisitos);
 
-      document.getElementById('detalhe-titulo').textContent = vaga.titulo;
-      document.getElementById('detalhe-empresa').textContent = vaga.empresa + ' · ' + vaga.cidade + ', ' + vaga.estado;
+  // Benefícios — grid seguro
+  renderizarBeneficios('detalhe-beneficios', vaga.beneficios);
 
-      document.getElementById('detalhe-carga').textContent = vaga.carga;
-      document.getElementById('detalhe-bolsa').textContent = vaga.bolsa;
-      document.getElementById('detalhe-publicada').textContent = 'Há ' + vaga.publicada + ' dia' + (vaga.publicada > 1 ? 's' : '');
-      document.getElementById('detalhe-encerra').textContent = vaga.encerra + ' dias';
+  // Título da aba
+  document.title = `${vaga.titulo} — Descola`;
 
-      document.getElementById('detalhe-descricao').textContent = vaga.descricao;
+  // Salvar para o formulário
+  try {
+    localStorage.setItem('vagaTitulo',  vaga.titulo);
+    localStorage.setItem('vagaEmpresa', vaga.empresa);
+  } catch { /* ignorar se storage indisponível */ }
+}
 
-      var reqHtml = '';
-      for (var r = 0; r < vaga.requisitos.length; r++) {
-        reqHtml += '<li>' + vaga.requisitos[r] + '</li>';
-      }
-      document.getElementById('detalhe-requisitos').innerHTML = reqHtml;
+/** Define textContent de forma segura */
+function setText(id, texto) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = texto;
+}
 
-      var benHtml = '';
-      for (var b = 0; b < vaga.beneficios.length; b++) {
-        benHtml += '<div class="beneficio-item">' + vaga.beneficios[b] + '</div>';
-      }
-      document.getElementById('detalhe-beneficios').innerHTML = benHtml;
+/**
+ * Renderiza uma lista <ul> de forma segura.
+ * PASSO 9 — C2: createElement + textContent (sem innerHTML).
+ */
+function renderizarLista(containerId, itens) {
+  const ul = document.getElementById(containerId);
+  if (!ul) return;
+  ul.replaceChildren();
+  itens.forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = item;
+    ul.appendChild(li);
+  });
+}
 
-      document.title = vaga.titulo + ' — Descola';
+/**
+ * Renderiza o grid de benefícios de forma segura.
+ * PASSO 9 — C2: createElement + textContent (sem innerHTML).
+ */
+function renderizarBeneficios(containerId, beneficios) {
+  const grid = document.getElementById(containerId);
+  if (!grid) return;
+  grid.replaceChildren();
+  beneficios.forEach(ben => {
+    const div = document.createElement('div');
+    div.className = 'beneficio-item';
+    div.textContent = ben;
+    grid.appendChild(div);
+  });
+}
 
-      // salva para uso no formulário
-      localStorage.setItem('vagaTitulo', vaga.titulo);
-      localStorage.setItem('vagaEmpresa', vaga.empresa);
-    }
-  };
-  xhr.send();
+function mostrarErroDetalhe() {
+  const container = document.querySelector('.detalhe-container');
+  if (!container) return;
+  container.replaceChildren();
+  const p = document.createElement('p');
+  p.style.cssText = 'text-align:center;color:#6B6B67;padding:60px 20px;';
+  p.textContent = 'Não foi possível carregar os detalhes desta vaga. Tente novamente.';
+  container.appendChild(p);
 }
 
 function irParaCandidatura() {
   window.location.href = 'candidatura.html';
 }
 
-window.onload = function() {
+// ── Menu mobile ────────────────────────────────────────────────
+function iniciarMenuMobile() {
+  const toggle = document.querySelector('.nav-toggle');
+  const menu   = document.getElementById('nav-menu');
+  if (!toggle || !menu) return;
+  toggle.addEventListener('click', () => {
+    const aberto = menu.classList.toggle('aberto');
+    toggle.setAttribute('aria-expanded', aberto ? 'true' : 'false');
+  });
+}
+
+// ── Inicialização ──────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
   carregarDetalhe();
-};
+  iniciarMenuMobile();
+});
