@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Descola — Formulário de candidatura">
   <title>Candidatura — Descola</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -9,117 +11,193 @@
 </head>
 <body>
 
-  <nav>
-    <a href="index.html" class="logo">Descola</a>
-    <ul>
+  <a href="#conteudo-principal" class="skip-link">Ir para o conteúdo principal</a>
+
+  <nav role="navigation" aria-label="Navegação principal">
+    <a href="index.html" class="logo" aria-label="Descola — Página inicial">Descola</a>
+    <button class="nav-toggle" aria-controls="nav-menu" aria-expanded="false" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul id="nav-menu">
       <li><a href="vagas.html">Vagas</a></li>
       <li><a href="painel.html">Para recrutadores</a></li>
       <li><a href="sobre.html">Sobre</a></li>
     </ul>
   </nav>
 
-  <div class="form-container">
-    <div class="form-card" id="form-card">
+  <main id="conteudo-principal" role="main">
+    <div class="form-container">
+      <div class="form-card" id="form-card">
 
-      <h1>Formulário de candidatura</h1>
-      <!-- DÍVIDA TÉCNICA: parágrafo de contexto sem id para aria-describedby -->
-      <p class="form-subtitulo" id="form-subtitulo">Carregando vaga...</p>
+        <h1>Formulário de candidatura</h1>
+        <p class="form-subtitulo" id="form-subtitulo">Carregando vaga...</p>
 
-      <!-- DÍVIDA TÉCNICA: sem progressbar acessível (aria-valuenow / aria-valuemin / aria-valuemax) -->
-      <div style="margin-bottom:24px;">
-        <p style="font-size:12px;color:#1A3A2A;font-weight:600;margin-bottom:6px;">Etapa 1 de 2 — Seus dados</p>
-        <div style="height:4px;background:#E0DED9;border-radius:2px;">
-          <div style="height:4px;background:#1A3A2A;border-radius:2px;width:50%;"></div>
-        </div>
-      </div>
-
-      <!-- DÍVIDA TÉCNICA: form sem novalidate — validação nativa sobrepõe a do JS -->
-      <form id="form-candidatura">
-
-        <div class="campo">
-          <label for="nome">Nome completo <span style="color:#A32D2D;">*</span></label>
-          <!-- DÍVIDA TÉCNICA: sem aria-required="true" -->
-          <input type="text" id="nome" name="nome" autocomplete="name"
-                 placeholder="Seu nome completo" />
-        </div>
-
-        <div class="campo">
-          <label for="email">E-mail <span style="color:#A32D2D;">*</span></label>
-          <input type="email" id="email" name="email" autocomplete="email"
-                 placeholder="seuemail@exemplo.com" />
-          <p class="dica">Usaremos apenas para te contatar sobre essa vaga</p>
-        </div>
-
-        <div class="campo">
-          <label for="tel">Telefone / WhatsApp <span style="color:#A32D2D;">*</span></label>
-          <input type="tel" id="tel" name="tel" autocomplete="tel"
-                 placeholder="(85) 9 0000-0000" />
-        </div>
-
-        <div class="campo">
-          <label for="idade">Sua idade <span style="color:#A32D2D;">*</span></label>
-          <select id="idade" name="idade">
-            <option value="" disabled selected>Selecione sua idade</option>
-            <option value="16">16 anos</option>
-            <option value="17">17 anos</option>
-            <option value="18">18 anos</option>
-            <option value="19-24">19 a 24 anos</option>
-            <option value="25+">25 anos ou mais</option>
-          </select>
-        </div>
-
-        <div class="campo">
-          <!-- DÍVIDA TÉCNICA: label sem for — não associado ao select -->
-          <label>Escolaridade</label>
-          <select name="escolaridade">
-            <option value="" disabled selected>Selecione</option>
-            <option>Ensino fundamental incompleto</option>
-            <option>Ensino fundamental completo</option>
-            <option>Ensino médio incompleto</option>
-            <option>Ensino médio completo</option>
-            <option>Ensino superior incompleto</option>
-            <option>Ensino superior completo</option>
-          </select>
-        </div>
-
-        <div class="campo">
-          <label>Currículo (opcional)</label>
-          <!-- DÍVIDA TÉCNICA: área de upload sem role="button" e sem tabindex -->
-          <div class="upload-area" onclick="document.getElementById('arquivo').click()">
-            <p>Clique para enviar seu currículo</p>
-            <span>PDF ou Word, até 5 MB</span>
-            <input type="file" id="arquivo" name="arquivo" accept=".pdf,.doc,.docx"
-                   style="display:none;" />
+        <!-- CORREÇÃO P8: progressbar acessível com aria-valuenow/min/max -->
+        <div style="margin-bottom:24px;">
+          <p style="font-size:12px;color:#1A3A2A;font-weight:600;margin-bottom:6px;"
+             id="progresso-label">Etapa 1 de 2 — Seus dados</p>
+          <div role="progressbar"
+               aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"
+               aria-labelledby="progresso-label"
+               style="height:4px;background:#E0DED9;border-radius:2px;">
+            <div style="height:4px;background:#1A3A2A;border-radius:2px;width:50%;"></div>
           </div>
-          <p class="dica">Sem currículo? Não tem problema — você pode se candidatar mesmo assim.</p>
         </div>
 
-        <div class="campo">
-          <label for="msg">Por que você quer essa vaga? (opcional)</label>
-          <textarea id="msg" name="msg"
-                    placeholder="Conte um pouco sobre você e sua motivação..."></textarea>
-        </div>
+        <!-- CORREÇÃO P8: novalidate para permitir validação inline personalizada -->
+        <!-- CORREÇÃO P8: aria-describedby nos erros, aria-required, aria-invalid -->
+        <form id="form-candidatura" novalidate>
 
-        <div class="checkbox-row">
-          <input type="checkbox" id="lgpd" name="lgpd" />
-          <span>Concordo com o uso dos meus dados conforme a
-            <a href="#" style="color:#2E7D52;">Política de Privacidade</a>
-            do Descola (LGPD) <span style="color:#A32D2D;">*</span></span>
-        </div>
+          <!-- Região de erro global (role="alert" anuncia dinamicamente) -->
+          <div id="erro-global" role="alert" aria-live="assertive"
+               class="erro-global" style="display:none;"></div>
 
-        <div class="form-actions">
-          <button type="submit" class="btn-primary">Continuar para revisão</button>
-          <button type="button" class="btn-secondary">Salvar e continuar depois</button>
-        </div>
+          <div class="campo">
+            <label for="nome">
+              Nome completo
+              <span aria-hidden="true" style="color:#A32D2D;">*</span>
+            </label>
+            <input type="text" id="nome" name="nome"
+                   autocomplete="name"
+                   placeholder="Seu nome completo"
+                   required aria-required="true"
+                   aria-describedby="erro-nome" />
+            <!-- CORREÇÃO P8-A4: mensagem de erro inline com aria-describedby -->
+            <span id="erro-nome" class="msg-erro" role="alert"
+                  aria-live="polite" style="display:none;"></span>
+          </div>
 
-      </form>
+          <div class="campo">
+            <label for="email">
+              E-mail
+              <span aria-hidden="true" style="color:#A32D2D;">*</span>
+            </label>
+            <input type="email" id="email" name="email"
+                   autocomplete="email"
+                   placeholder="seuemail@exemplo.com"
+                   required aria-required="true"
+                   aria-describedby="erro-email dica-email" />
+            <p class="dica" id="dica-email">
+              Usaremos apenas para te contatar sobre essa vaga
+            </p>
+            <span id="erro-email" class="msg-erro" role="alert"
+                  aria-live="polite" style="display:none;"></span>
+          </div>
+
+          <div class="campo">
+            <label for="tel">
+              Telefone / WhatsApp
+              <span aria-hidden="true" style="color:#A32D2D;">*</span>
+            </label>
+            <input type="tel" id="tel" name="tel"
+                   autocomplete="tel"
+                   placeholder="(85) 9 0000-0000"
+                   required aria-required="true"
+                   aria-describedby="erro-tel" />
+            <span id="erro-tel" class="msg-erro" role="alert"
+                  aria-live="polite" style="display:none;"></span>
+          </div>
+
+          <div class="campo">
+            <label for="idade">
+              Sua idade
+              <span aria-hidden="true" style="color:#A32D2D;">*</span>
+            </label>
+            <select id="idade" name="idade"
+                    required aria-required="true"
+                    aria-describedby="erro-idade">
+              <option value="" disabled selected>Selecione sua idade</option>
+              <option value="16">16 anos</option>
+              <option value="17">17 anos</option>
+              <option value="18">18 anos</option>
+              <option value="19-24">19 a 24 anos</option>
+              <option value="25+">25 anos ou mais</option>
+            </select>
+            <span id="erro-idade" class="msg-erro" role="alert"
+                  aria-live="polite" style="display:none;"></span>
+          </div>
+
+          <div class="campo">
+            <!-- CORREÇÃO P8-A3: label associado via for/id — dívida técnica corrigida -->
+            <label for="escolaridade">Escolaridade</label>
+            <select id="escolaridade" name="escolaridade">
+              <option value="" disabled selected>Selecione</option>
+              <option>Ensino fundamental incompleto</option>
+              <option>Ensino fundamental completo</option>
+              <option>Ensino médio incompleto</option>
+              <option>Ensino médio completo</option>
+              <option>Ensino superior incompleto</option>
+              <option>Ensino superior completo</option>
+            </select>
+          </div>
+
+          <div class="campo">
+            <label id="label-curriculo">Currículo (opcional)</label>
+            <!-- CORREÇÃO P8: role="button", tabindex e aria-labelledby na área de upload -->
+            <div class="upload-area"
+                 role="button" tabindex="0"
+                 aria-labelledby="label-curriculo"
+                 aria-describedby="dica-curriculo"
+                 onclick="document.getElementById('arquivo').click()"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){document.getElementById('arquivo').click()}">
+              <p>Clique para enviar seu currículo</p>
+              <span>PDF ou Word, até 5 MB</span>
+              <input type="file" id="arquivo" name="arquivo"
+                     accept=".pdf,.doc,.docx"
+                     aria-hidden="true"
+                     style="display:none;"
+                     onchange="mostrarNomeArquivo(this)" />
+            </div>
+            <p class="dica" id="dica-curriculo">
+              Sem currículo? Não tem problema — você pode se candidatar mesmo assim.
+            </p>
+            <p id="nome-arquivo" aria-live="polite" style="font-size:12px;color:#2E7D52;display:none;"></p>
+          </div>
+
+          <div class="campo">
+            <label for="msg">Por que você quer essa vaga? (opcional)</label>
+            <textarea id="msg" name="msg"
+                      placeholder="Conte um pouco sobre você e sua motivação..."></textarea>
+          </div>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="lgpd" name="lgpd"
+                   required aria-required="true"
+                   aria-describedby="erro-lgpd" />
+            <label for="lgpd">
+              Concordo com o uso dos meus dados conforme a
+              <a href="#">Política de Privacidade</a>
+              do Descola (LGPD)
+              <span aria-hidden="true" style="color:#A32D2D;">*</span>
+            </label>
+          </div>
+          <span id="erro-lgpd" class="msg-erro" role="alert"
+                aria-live="polite" style="display:none;"></span>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Continuar para revisão</button>
+            <button type="button" class="btn-secondary">Salvar e continuar depois</button>
+          </div>
+
+        </form>
+      </div>
     </div>
-  </div>
+  </main>
 
-  <footer>
-    <p>Descola &copy; 2025 · ODS 8 — Trabalho Decente e Crescimento Econômico</p>
+  <footer role="contentinfo">
+    <p>Descola &copy; 2025 &middot; ODS 8 &mdash; Trabalho Decente e Crescimento Econômico</p>
   </footer>
 
+  <script src="js/utils.js"></script>
   <script src="js/candidatura.js"></script>
+  <script>
+    function mostrarNomeArquivo(input) {
+      const el = document.getElementById('nome-arquivo');
+      if (input.files && input.files[0]) {
+        el.textContent = 'Arquivo selecionado: ' + input.files[0].name;
+        el.style.display = 'block';
+      }
+    }
+  </script>
 </body>
 </html>
