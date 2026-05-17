@@ -19,13 +19,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: '22'
 
       - name: Instalar dependências de lint
-        run: |
-          npm install -g eslint stylelint htmlhint
-          npm install -g stylelint-config-standard
+        run: npm install -g eslint stylelint htmlhint stylelint-config-standard
 
       - name: Rodar ESLint (JavaScript)
         run: eslint js/*.js --max-warnings=100
@@ -51,16 +48,16 @@ jobs:
       - name: Verificar arquivos obrigatórios
         run: |
           echo "Verificando estrutura do projeto..."
-          test -f index.html        && echo "✅ index.html"        || (echo "❌ index.html não encontrado" && exit 1)
-          test -f vagas.html        && echo "✅ vagas.html"        || (echo "❌ vagas.html não encontrado" && exit 1)
-          test -f vaga-detalhe.html && echo "✅ vaga-detalhe.html" || (echo "❌ vaga-detalhe.html não encontrado" && exit 1)
-          test -f candidatura.html  && echo "✅ candidatura.html"  || (echo "❌ candidatura.html não encontrado" && exit 1)
-          test -f painel.html       && echo "✅ painel.html"       || (echo "❌ painel.html não encontrado" && exit 1)
-          test -f sobre.html        && echo "✅ sobre.html"        || (echo "❌ sobre.html não encontrado" && exit 1)
-          test -f css/style.css     && echo "✅ css/style.css"     || (echo "❌ css/style.css não encontrado" && exit 1)
-          test -f js/main.js        && echo "✅ js/main.js"        || (echo "❌ js/main.js não encontrado" && exit 1)
-          test -f data/vagas.json   && echo "✅ data/vagas.json"   || (echo "❌ data/vagas.json não encontrado" && exit 1)
-          echo "✅ Estrutura válida."
+          test -f index.html        && echo "OK index.html"        || (echo "ERRO index.html nao encontrado" && exit 1)
+          test -f vagas.html        && echo "OK vagas.html"        || (echo "ERRO vagas.html nao encontrado" && exit 1)
+          test -f vaga-detalhe.html && echo "OK vaga-detalhe.html" || (echo "ERRO vaga-detalhe.html nao encontrado" && exit 1)
+          test -f candidatura.html  && echo "OK candidatura.html"  || (echo "ERRO candidatura.html nao encontrado" && exit 1)
+          test -f painel.html       && echo "OK painel.html"       || (echo "ERRO painel.html nao encontrado" && exit 1)
+          test -f sobre.html        && echo "OK sobre.html"        || (echo "ERRO sobre.html nao encontrado" && exit 1)
+          test -f css/style.css     && echo "OK css/style.css"     || (echo "ERRO css/style.css nao encontrado" && exit 1)
+          test -f js/main.js        && echo "OK js/main.js"        || (echo "ERRO js/main.js nao encontrado" && exit 1)
+          test -f data/vagas.json   && echo "OK data/vagas.json"   || (echo "ERRO data/vagas.json nao encontrado" && exit 1)
+          echo "Estrutura valida."
 
       - name: Validar JSON das vagas
         run: |
@@ -73,9 +70,9 @@ jobs:
           for v in vagas:
               for c in campos:
                   if c not in v:
-                      print(f'ERRO: campo {c} ausente na vaga {v.get(\"id\",\"?\")}')
+                      print('ERRO: campo ' + c + ' ausente na vaga ' + str(v.get('id','?')))
                       sys.exit(1)
-          print(f'✅ vagas.json válido — {len(vagas)} vagas encontradas.')
+          print('vagas.json valido — ' + str(len(vagas)) + ' vagas encontradas.')
           "
 
       - name: Upload do artefato de build
