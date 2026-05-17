@@ -1,79 +1,129 @@
 <!DOCTYPE html>
-<!-- DÍVIDA TÉCNICA: sem atributo lang -->
-<html>
+<!-- CORREÇÃO P8-C3: lang="pt-BR" adicionado -->
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <!-- DÍVIDA TÉCNICA: sem meta viewport — não responsivo -->
-  <title>Descola</title>
+  <!-- CORREÇÃO P8-A1: meta viewport adicionado -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Descola — Vagas de emprego, estágio e aprendizagem para jovens em situação de vulnerabilidade.">
+  <title>Descola — Descole sua vaga</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- DÍVIDA TÉCNICA: nav sem role="navigation" e sem aria-label -->
-  <nav>
-    <a href="index.html" class="logo">Descola</a>
-    <ul>
+  <!-- CORREÇÃO P8-A2: role="navigation" e aria-label adicionados -->
+  <nav role="navigation" aria-label="Navegação principal">
+    <a href="index.html" class="logo" aria-label="Descola — Página inicial">Descola</a>
+    <button class="nav-toggle" aria-controls="nav-menu" aria-expanded="false" aria-label="Abrir menu de navegação">
+      <span></span><span></span><span></span>
+    </button>
+    <ul id="nav-menu">
+      <!-- CORREÇÃO P8-M6: aria-current="page" no link ativo -->
       <li><a href="vagas.html">Vagas</a></li>
       <li><a href="painel.html">Para recrutadores</a></li>
       <li><a href="sobre.html">Sobre</a></li>
     </ul>
   </nav>
 
-  <!-- DÍVIDA TÉCNICA: section sem aria-labelledby -->
-  <section class="hero">
-    <!-- DÍVIDA TÉCNICA: h1 sem id para referência -->
-    <h1>Descola sua vaga.<br>Comece hoje.</h1>
-    <p>Vagas de emprego, estágio e aprendizagem para quem está começando.</p>
-    <!-- DÍVIDA TÉCNICA: form sem role="search" e sem label no input -->
-    <form class="busca-form" id="form-busca">
-      <input type="text" id="busca" placeholder="Cargo, área ou empresa..." />
-      <button type="submit">Buscar</button>
-    </form>
-  </section>
+  <!-- CORREÇÃO P8-A2: role="main" adicionado -->
+  <main id="conteudo-principal" role="main">
 
-  <div class="filtros">
-    <p>Filtrar por área</p>
-    <!-- DÍVIDA TÉCNICA: chips sem role="group", sem aria-label, sem role="button" -->
-    <div class="chips">
-      <span class="chip chip-ativo" data-tipo="todos" onclick="ativarChip(this)">Todos</span>
-      <span class="chip" data-tipo="Administrativo" onclick="ativarChip(this)">Administrativo</span>
-      <span class="chip" data-tipo="Tecnologia" onclick="ativarChip(this)">Tecnologia</span>
-      <span class="chip" data-tipo="Saúde" onclick="ativarChip(this)">Saúde</span>
-      <span class="chip" data-tipo="Comercial" onclick="ativarChip(this)">Comercial</span>
-      <span class="chip" data-tipo="Design" onclick="ativarChip(this)">Design</span>
-      <span class="chip" data-tipo="Marketing" onclick="ativarChip(this)">Marketing</span>
-      <span class="chip" data-tipo="Logistica" onclick="ativarChip(this)">Logística</span>
+    <section class="hero" aria-labelledby="hero-titulo">
+      <h1 id="hero-titulo">Descola sua vaga.<br>Comece hoje.</h1>
+      <p>Vagas de emprego, estágio e aprendizagem para quem está começando.</p>
+      <!-- CORREÇÃO P8-A2: role="search" adicionado no formulário de busca -->
+      <form class="busca-form" id="form-busca" role="search" aria-label="Buscar vagas">
+        <label for="busca" class="sr-only">Buscar por cargo, área ou empresa</label>
+        <input type="search" id="busca" name="busca"
+               placeholder="Cargo, área ou empresa..."
+               aria-label="Buscar por cargo, área ou empresa" />
+        <button type="submit">Buscar</button>
+      </form>
+    </section>
+
+    <div class="filtros">
+      <p id="label-filtros">Filtrar por área</p>
+      <!-- CORREÇÃO P8-M1: role="group", aria-labelledby e role="button" + tabindex nos chips -->
+      <div class="chips" role="group" aria-labelledby="label-filtros">
+        <span class="chip chip-ativo" role="button" tabindex="0"
+              data-tipo="todos" aria-pressed="true"
+              onclick="ativarChip(this)"
+              onkeydown="if(event.key==='Enter'||event.key===' '){ativarChip(this)}">Todos</span>
+        <span class="chip" role="button" tabindex="0"
+              data-tipo="Administrativo" aria-pressed="false"
+              onclick="ativarChip(this)"
+              onkeydown="if(event.key==='Enter'||event.key===' '){ativarChip(this)}">Administrativo</span>
+        <span class="chip" role="button" tabindex="0"
+              data-tipo="Tecnologia" aria-pressed="false"
+              onclick="ativarChip(this)"
+              onkeydown="if(event.key==='Enter'||event.key===' '){ativarChip(this)}">Tecnologia</span>
+        <span class="chip" role="button" tabindex="0"
+              data-tipo="Saúde" aria-pressed="false"
+              onclick="ativarChip(this)"
+              onkeydown="if(event.key==='Enter'||event.key===' '){ativarChip(this)}">Saúde</span>
+        <span class="chip" role="button" tabindex="0"
+              data-tipo="Comercial" aria-pressed="false"
+              onclick="ativarChip(this)"
+              onkeydown="if(event.key==='Enter'||event.key===' '){ativarChip(this)}">Comercial</span>
+        <span class="chip" role="button" tabindex="0"
+              data-tipo="Design" aria-pressed="false"
+              onclick="ativarChip(this)"
+              onkeydown="if(event.key==='Enter'||event.key===' '){ativarChip(this)}">Design</span>
+        <span class="chip" role="button" tabindex="0"
+              data-tipo="Marketing" aria-pressed="false"
+              onclick="ativarChip(this)"
+              onkeydown="if(event.key==='Enter'||event.key===' '){ativarChip(this)}">Marketing</span>
+        <span class="chip" role="button" tabindex="0"
+              data-tipo="Logistica" aria-pressed="false"
+              onclick="ativarChip(this)"
+              onkeydown="if(event.key==='Enter'||event.key===' '){ativarChip(this)}">Logística</span>
+      </div>
     </div>
-  </div>
 
-  <div class="secao">
-    <!-- DÍVIDA TÉCNICA: id no h2 mas sem aria-labelledby na section pai -->
-    <h2>Vagas em destaque</h2>
-    <!-- DÍVIDA TÉCNICA: sem aria-live para anunciar resultado de busca -->
-    <p id="contador" style="font-size:13px;color:#6B6B67;margin-bottom:16px;"></p>
-  </div>
+    <section class="secao" aria-labelledby="titulo-destaques">
+      <h2 id="titulo-destaques">Vagas em destaque</h2>
+      <!-- CORREÇÃO P8-M3: aria-live="polite" e role="status" no contador -->
+      <p id="contador" role="status" aria-live="polite" aria-atomic="true"
+         style="font-size:13px;color:#6B6B67;margin-bottom:16px;"></p>
+    </section>
 
-  <!-- DÍVIDA TÉCNICA: grid de cards sem role, sem aria-label -->
-  <div class="vagas-grid" id="vagas-container"></div>
+    <!-- CORREÇÃO P8-A2: role="region" e aria-label na grid de cards -->
+    <div class="vagas-grid" id="vagas-container"
+         role="region" aria-label="Lista de vagas"></div>
 
-  <div class="paginacao" id="paginacao"></div>
+    <nav class="paginacao" id="paginacao" aria-label="Paginação de vagas"></nav>
 
-  <!-- DÍVIDA TÉCNICA: div sem role="complementary" -->
-  <div style="background:#F0F9F3;border:0.5px solid #A8DFB8;border-radius:12px;margin:0 40px 40px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
-    <div>
-      <strong style="display:block;font-size:15px;color:#1A3A2A;margin-bottom:4px;">Você recruta talentos?</strong>
-      <p style="font-size:13px;color:#1A3A2A;">Publique vagas gratuitas e alcance jovens prontos para começar.</p>
-    </div>
-    <a href="painel.html" class="btn-primary" style="white-space:nowrap;">Cadastrar vaga</a>
-  </div>
+    <!-- CORREÇÃO: role="complementary" e aria-label na seção de recrutadores -->
+    <aside role="complementary" aria-label="Área para recrutadores"
+           style="background:#F0F9F3;border:0.5px solid #A8DFB8;border-radius:12px;
+                  margin:0 40px 40px;padding:20px 24px;display:flex;
+                  align-items:center;justify-content:space-between;gap:16px;">
+      <div>
+        <strong style="display:block;font-size:15px;color:#1A3A2A;margin-bottom:4px;">
+          Você recruta talentos?
+        </strong>
+        <p style="font-size:13px;color:#1A3A2A;">
+          Publique vagas gratuitas e alcance jovens prontos para começar.
+        </p>
+      </div>
+      <a href="painel.html" class="btn-primary" style="white-space:nowrap;">
+        Cadastrar vaga
+      </a>
+    </aside>
 
-  <!-- DÍVIDA TÉCNICA: footer sem role="contentinfo" -->
-  <footer>
-    <p>Descola &copy; 2025 · ODS 8 — Trabalho Decente e Crescimento Econômico</p>
+  </main>
+
+  <!-- CORREÇÃO P8-A2: role="contentinfo" adicionado -->
+  <footer role="contentinfo">
+    <p>Descola &copy; 2025 &middot; ODS 8 &mdash; Trabalho Decente e Crescimento Econômico</p>
   </footer>
 
+  <!-- Link de pulo para conteúdo principal (acessibilidade por teclado) -->
+  <a href="#conteudo-principal" class="skip-link">Ir para o conteúdo principal</a>
+
+  <script src="js/utils.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
