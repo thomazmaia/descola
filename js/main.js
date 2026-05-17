@@ -1,136 +1,262 @@
-// VERSÃO ANTES — contém dívidas técnicas propositais para fins acadêmicos
-// Problemas: função gigante sem separação de responsabilidades,
-// variáveis globais, sem tratamento de erro, innerHTML inseguro,
-// repetição de lógica, magic numbers
+/**
+ * main.js — lógica das páginas Home e Lista de Vagas
+ *
+ * PASSO 9 refatorações aplicadas:
+ * A5: var → const/let em todo o arquivo
+ * A6: funções gigantes decompostas em responsabilidades únicas (SRP)
+ * A7: badge logic movida para utils.js (DRY)
+ * B2: XHR → fetch com tratamento de erro
+ * B3: variável vagaAtual removida
+ * C2: createElement + textContent (sem innerHTML com dados externos)
+ * M5: == → ===
+ */
 
-var todasVagas = [];
-var vagaAtual = null;
-var paginaAtual = 1;
-var vagasPorPagina = 6;
+'use strict';
 
-// DÍVIDA TÉCNICA: função gigante que faz tudo (viola SRP)
-function carregarVagas() {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'data/vagas.json', true);
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState == 4 && xhr.status == 200) {
-      todasVagas = JSON.parse(xhr.responseText);
-      renderizarCards(todasVagas);
-      renderizarPaginacao(todasVagas.length);
-    }
-    // DÍVIDA TÉCNICA: sem tratamento de erro (status != 200)
-  };
-  xhr.send();
+// ── Estado da aplicação ───────────────────────────────────────
+let todasVagas   = [];
+let paginaAtual  = 1;
+const VAGAS_POR_PAGINA = 6;
+
+// ── Fetch das vagas ────────────────────────────────────────────
+/**
+ * PASSO 9 — A6 (SRP): apenas busca os dados.
+ * PASSO 9 — B2: usa fetchJSON de utils.js com tratamento de erro.
+ */
+async function carregarVagas() {
+  try {
+    todasVagas = await fetchJSON('data/vagas.json');
+    renderizarCards(todasVagas);
+    renderizarPaginacao(todasVagas.length);
+    atualizarContador(todasVagas.length);
+  } catch (erro) {
+    mostrarErroCarregamento(erro.message);
+  }
 }
 
-// DÍVIDA TÉCNICA: innerHTML com dados externos sem sanitização
+/**
+ * Exibe mensagem amigável quando o JSON não carrega.
+ * PASSO 9 — B2: tratamento de erro de rede.
+ */
+function mostrarErroCarregamento(mensagem) {
+  const container = document.getElementById('vagas-container');
+  if (!container) return;
+  const p = document.createElement('p');
+  p.style.cssText = 'text-align:center;color:#6B6B67;padding:40px;';
+  p.textContent = 'Não foi possível carregar as vagas. Tente novamente mais tarde.';
+  container.appendChild(p);
+  console.error('Erro ao carregar vagas:', mensagem);
+}
+
+// ── Renderização de cards ──────────────────────────────────────
+/**
+ * PASSO 9 — A6 (SRP): apenas renderiza os cards na tela.
+ * PASSO 9 — C2: usa createElement (sem innerHTML com dados do JSON).
+ */
 function renderizarCards(vagas) {
-  var container = document.getElementById('vagas-container');
+  const container = document.getElementById('vagas-container');
   if (!container) return;
 
-  var inicio = (paginaAtual - 1) * vagasPorPagina;
-  var fim = inicio + vagasPorPagina;
-  var vagasPagina = vagas.slice(inicio, fim);
+  // Limpar container de forma segura
+  container.replaceChildren();
 
-  var html = '';
-  for (var i = 0; i < vagasPagina.length; i++) {
-    var v = vagasPagina[i];
-    // DÍVIDA TÉCNICA: lógica de badge repetida aqui e em vaga-detalhe.js
-    var classModal = 'badge-modalidade-' + v.modalidade.toLowerCase();
-    html += '<div class="card-vaga" onclick="irParaDetalhe(' + v.id + ')">';
-    html += '  <div class="badges">';
-    html += '    <span class="badge-tipo">' + v.tipo + '</span>';
-    html += '    <span class="' + classModal + '">' + v.modalidade + '</span>';
-    html += '  </div>';
-    html += '  <h3>' + v.titulo + '</h3>';
-    html += '  <p class="empresa">' + v.empresa + ' · ' + v.cidade + ', ' + v.estado + '</p>';
-    html += '  <div class="rodape">';
-    html += '    <span class="tempo">Publicada há ' + v.publicada + ' dia' + (v.publicada > 1 ? 's' : '') + '</span>';
-    html += '    <button class="btn-primary">Ver vaga</button>';
-    html += '  </div>';
-    html += '</div>';
-  }
+  const inicio = (paginaAtual - 1) * VAGAS_POR_PAGINA;
+  const vagasPagina = vagas.slice(inicio, inicio + VAGAS_POR_PAGINA);
 
   if (vagasPagina.length === 0) {
-    html = '<p style="text-align:center;color:#6B6B67;padding:40px;">Nenhuma vaga encontrada.</p>';
+    const p = document.createElement('p');
+    p.style.cssText = 'text-align:center;color:#6B6B67;padding:40px;grid-column:1/-1;';
+    p.textContent = 'Nenhuma vaga encontrada para os filtros selecionados.';
+    container.appendChild(p);
+    return;
   }
 
-  container.innerHTML = html;
+  vagasPagina.forEach(v => {
+    container.appendChild(criarCard(v));
+  });
 }
 
+/**
+ * Cria um card de vaga como elemento DOM.
+ * PASSO 9 — A6 (SRP): responsabilidade única de criar um card.
+ * PASSO 9 — C2: textContent em vez de innerHTML.
+ * @param {Object} vaga
+ * @returns {HTMLElement}
+ */
+function criarCard(vaga) {
+  const article = document.createElement('article');
+  article.className = 'card-vaga';
+  article.setAttribute('role', 'article');
+  article.setAttribute('aria-label', `Vaga: ${vaga.titulo} em ${vaga.empresa}`);
+  article.addEventListener('click', () => irParaDetalhe(vaga.id));
+  article.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') irParaDetalhe(vaga.id);
+  });
+  article.setAttribute('tabindex', '0');
+
+  // Badges — via utils.js (DRY)
+  const badges = document.createElement('div');
+  badges.className = 'badges';
+  badges.appendChild(criarBadges(vaga.tipo, vaga.modalidade));
+  article.appendChild(badges);
+
+  // Título
+  const h3 = document.createElement('h3');
+  h3.textContent = vaga.titulo;
+  article.appendChild(h3);
+
+  // Empresa
+  const empresa = document.createElement('p');
+  empresa.className = 'empresa';
+  empresa.textContent = `${vaga.empresa} · ${vaga.cidade}, ${vaga.estado}`;
+  article.appendChild(empresa);
+
+  // Rodapé do card
+  const rodape = document.createElement('div');
+  rodape.className = 'rodape';
+
+  const tempo = document.createElement('span');
+  tempo.className = 'tempo';
+  tempo.textContent = formatarDias(vaga.publicada);
+  rodape.appendChild(tempo);
+
+  const btn = document.createElement('button');
+  btn.className = 'btn-primary';
+  btn.textContent = 'Ver vaga';
+  btn.setAttribute('aria-label', `Ver detalhes da vaga: ${vaga.titulo}`);
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    irParaDetalhe(vaga.id);
+  });
+  rodape.appendChild(btn);
+
+  article.appendChild(rodape);
+  return article;
+}
+
+// ── Paginação ──────────────────────────────────────────────────
+/**
+ * PASSO 9 — A6 (SRP): responsabilidade única de renderizar paginação.
+ * PASSO 9 — C2: createElement (sem innerHTML).
+ */
 function renderizarPaginacao(total) {
-  var container = document.getElementById('paginacao');
+  const container = document.getElementById('paginacao');
   if (!container) return;
-  var totalPaginas = Math.ceil(total / vagasPorPagina);
-  var html = '';
-  html += '<button class="pag-btn" onclick="mudarPagina(' + (paginaAtual - 1) + ')">&#8249;</button>';
-  for (var p = 1; p <= totalPaginas; p++) {
-    var ativo = p === paginaAtual ? ' ativo' : '';
-    html += '<button class="pag-btn' + ativo + '" onclick="mudarPagina(' + p + ')">' + p + '</button>';
+
+  container.replaceChildren();
+  const totalPaginas = Math.ceil(total / VAGAS_POR_PAGINA);
+
+  const criarBtnPag = (label, pagina, isCurrent = false, ariaLabel = '') => {
+    const btn = document.createElement('button');
+    btn.className = 'pag-btn' + (isCurrent ? ' ativo' : '');
+    btn.textContent = label;
+    btn.setAttribute('aria-label', ariaLabel || `Página ${pagina}`);
+    if (isCurrent) btn.setAttribute('aria-current', 'page');
+    btn.addEventListener('click', () => mudarPagina(pagina));
+    return btn;
+  };
+
+  container.appendChild(criarBtnPag('‹', paginaAtual - 1, false, 'Página anterior'));
+  for (let p = 1; p <= totalPaginas; p++) {
+    container.appendChild(criarBtnPag(p, p, p === paginaAtual));
   }
-  html += '<button class="pag-btn" onclick="mudarPagina(' + (paginaAtual + 1) + ')">&#8250;</button>';
-  container.innerHTML = html;
+  container.appendChild(criarBtnPag('›', paginaAtual + 1, false, 'Próxima página'));
 }
 
 function mudarPagina(p) {
-  var total = todasVagas.length;
-  var totalPaginas = Math.ceil(total / vagasPorPagina);
+  const totalPaginas = Math.ceil(todasVagas.length / VAGAS_POR_PAGINA);
+  // PASSO 9 — M5: === em vez de ==
   if (p < 1 || p > totalPaginas) return;
   paginaAtual = p;
   renderizarCards(todasVagas);
-  renderizarPaginacao(total);
+  renderizarPaginacao(todasVagas.length);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function irParaDetalhe(id) {
-  localStorage.setItem('vagaId', id);
-  window.location.href = 'vaga-detalhe.html';
+// ── Filtro e busca ─────────────────────────────────────────────
+/**
+ * PASSO 9 — A6 (SRP): filtrarPorBusca separado de filtrarPorTipo.
+ */
+function filtrarPorBusca(vagas, termo) {
+  if (!termo) return vagas;
+  const t = termo.toLowerCase();
+  return vagas.filter(v =>
+    v.titulo.toLowerCase().includes(t)  ||
+    v.empresa.toLowerCase().includes(t) ||
+    v.cidade.toLowerCase().includes(t)  ||
+    v.area.toLowerCase().includes(t)
+  );
 }
 
-// DÍVIDA TÉCNICA: lógica de filtro e busca misturada na mesma função
+function filtrarPorTipo(vagas, tipo) {
+  if (!tipo || tipo === 'todos') return vagas;
+  return vagas.filter(v =>
+    v.tipo === tipo || v.modalidade === tipo || v.area === tipo
+  );
+}
+
 function filtrarVagas() {
-  var busca = document.getElementById('busca') ? document.getElementById('busca').value.toLowerCase() : '';
-  var tipoAtivo = document.querySelector('.chip-ativo') ? document.querySelector('.chip-ativo').dataset.tipo : 'todos';
+  const busca = document.getElementById('busca')?.value ?? '';
+  const tipoAtivo = document.querySelector('.chip-ativo')?.dataset.tipo ?? 'todos';
 
-  var resultado = todasVagas.filter(function(v) {
-    var matchBusca = v.titulo.toLowerCase().includes(busca) ||
-                     v.empresa.toLowerCase().includes(busca) ||
-                     v.cidade.toLowerCase().includes(busca) ||
-                     v.area.toLowerCase().includes(busca);
-    var matchTipo = tipoAtivo === 'todos' || v.tipo === tipoAtivo || v.modalidade === tipoAtivo || v.area === tipoAtivo;
-    return matchBusca && matchTipo;
-  });
+  let resultado = filtrarPorBusca(todasVagas, busca);
+  resultado = filtrarPorTipo(resultado, tipoAtivo);
 
   paginaAtual = 1;
   renderizarCards(resultado);
   renderizarPaginacao(resultado.length);
+  atualizarContador(resultado.length);
+}
 
-  var contador = document.getElementById('contador');
+function atualizarContador(total) {
+  const contador = document.getElementById('contador');
   if (contador) {
-    contador.textContent = resultado.length + ' vagas encontradas';
+    contador.textContent = `${total} vaga${total !== 1 ? 's' : ''} encontrada${total !== 1 ? 's' : ''}`;
   }
 }
 
 function ativarChip(el) {
-  var chips = document.querySelectorAll('.chip');
-  chips.forEach(function(c) { c.classList.remove('chip-ativo'); });
+  document.querySelectorAll('.chip').forEach(c => {
+    c.classList.remove('chip-ativo');
+    c.setAttribute('aria-pressed', 'false');
+  });
   el.classList.add('chip-ativo');
+  el.setAttribute('aria-pressed', 'true');
   filtrarVagas();
 }
 
-// DÍVIDA TÉCNICA: inicialização misturada com lógica de negócio
-window.onload = function() {
+function irParaDetalhe(id) {
+  try {
+    localStorage.setItem('vagaId', id);
+  } catch (e) {
+    console.warn('localStorage indisponível:', e);
+  }
+  window.location.href = 'vaga-detalhe.html';
+}
+
+// ── Menu mobile ────────────────────────────────────────────────
+function iniciarMenuMobile() {
+  const toggle = document.querySelector('.nav-toggle');
+  const menu   = document.getElementById('nav-menu');
+  if (!toggle || !menu) return;
+
+  toggle.addEventListener('click', () => {
+    const aberto = menu.classList.toggle('aberto');
+    toggle.setAttribute('aria-expanded', aberto ? 'true' : 'false');
+  });
+}
+
+// ── Inicialização ──────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
   carregarVagas();
+  iniciarMenuMobile();
 
-  var inputBusca = document.getElementById('busca');
-  if (inputBusca) {
-    inputBusca.addEventListener('input', filtrarVagas);
-  }
+  const inputBusca = document.getElementById('busca');
+  if (inputBusca) inputBusca.addEventListener('input', filtrarVagas);
 
-  var formBusca = document.getElementById('form-busca');
-  if (formBusca) {
-    formBusca.addEventListener('submit', function(e) {
-      e.preventDefault();
-      filtrarVagas();
-    });
-  }
-};
+  const formBusca = document.getElementById('form-busca');
+  if (formBusca) formBusca.addEventListener('submit', (e) => {
+    e.preventDefault();
+    filtrarVagas();
+  });
+});
